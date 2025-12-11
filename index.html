@@ -3,45 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Safety Onboarding Demo - Denar Financial</title>
+    <title>Safety Assessment - Denar Financial</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 </head>
 <body>
     <div class="header">
         <div class="logo">Denar Financial</div>
-        <div class="tagline">AI Powered Compliance & Safety Solutions</div>
+        <div class="tagline">AI Powered Safety Compliance & Assessment</div>
     </div>
 
     <div class="container">
-        <div class="demo-intro">
-            <h1>🛡️ Safety Onboarding Demo</h1>
-            <p class="subtitle">Experience automated employee safety training - the way your new hires would.</p>
-            <div class="demo-notice">
-                <strong>👤 Role Play:</strong> You're a new employee starting today. Complete your safety onboarding.
-            </div>
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+            <div class="progress-text" id="progressText">Question 1 of 34</div>
         </div>
 
-        <div class="chat-container" id="chatContainer">
-            <div class="message bot-message">
-                <strong>Safety Assistant:</strong> Welcome to your first day! I'm here to guide you through your safety training. This will take about 10 minutes. Let's start with your name - what should I call you?
-            </div>
-        </div>
+        <!-- Assessment Container -->
+        <div class="assessment-container" id="assessmentContainer">
+            <div class="question-card">
+                <div class="module-label" id="moduleLabel">Background Information</div>
+                <h2 class="question-text" id="questionText"></h2>
+                
+                <!-- Answer Options Container -->
+                <div class="options-container" id="optionsContainer"></div>
 
-        <div class="input-container">
-            <input type="text" id="userInput" placeholder="Type your response..." />
-            <button id="sendBtn">Send</button>
-        </div>
-
-        <div id="notification" class="notification hidden">
-            <h3>📊 Manager Dashboard View</h3>
-            <div class="dashboard-preview">
-                <div class="cert-card">
-                    <h4>✅ Training Complete</h4>
-                    <div id="certContent"></div>
-                    <p class="timestamp">Completed: <span id="timestamp"></span></p>
+                <!-- Navigation Buttons -->
+                <div class="button-container">
+                    <button class="btn-secondary" id="backBtn" style="display:none;">Back</button>
+                    <button class="btn-primary" id="nextBtn" disabled>Next</button>
                 </div>
             </div>
-            <p class="footer-note">Manager receives instant notification + compliance documentation</p>
+        </div>
+
+        <!-- Results Dashboard (Hidden until complete) -->
+        <div class="results-container hidden" id="resultsContainer">
+            <div class="results-header">
+                <h1>Safety Assessment Complete</h1>
+                <div class="overall-score">
+                    <div class="score-circle">
+                        <span class="score-value" id="overallScore">0</span>
+                        <span class="score-label">/100</span>
+                    </div>
+                    <div class="certification-status" id="certStatus">
+                        <h3 id="certResult">CERTIFIED</h3>
+                        <p id="certMessage">You have successfully completed the safety assessment</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-grid">
+                <!-- Module Scores -->
+                <div class="result-card">
+                    <h3>Module Performance</h3>
+                    <canvas id="radarChart"></canvas>
+                </div>
+
+                <!-- Risk Assessment -->
+                <div class="result-card">
+                    <h3>Risk Profile</h3>
+                    <div class="risk-indicator" id="riskIndicator">
+                        <div class="risk-level" id="riskLevel">MODERATE</div>
+                        <div class="risk-score" id="riskScore">3.5 / 10</div>
+                    </div>
+                    <div class="risk-factors" id="riskFactors"></div>
+                </div>
+
+                <!-- Behavioral Analysis -->
+                <div class="result-card">
+                    <h3>Behavioral Indicators</h3>
+                    <div id="behavioralScores"></div>
+                </div>
+
+                <!-- Recommendations -->
+                <div class="result-card">
+                    <h3>Recommended Actions</h3>
+                    <ul id="recommendations"></ul>
+                </div>
+
+                <!-- Detailed Breakdown -->
+                <div class="result-card full-width">
+                    <h3>Detailed Score Breakdown</h3>
+                    <div id="scoreBreakdown"></div>
+                </div>
+            </div>
+
+            <!-- Employee Certification -->
+            <div class="certification-card">
+                <h3>📋 Employee Certification</h3>
+                <div id="certDetails"></div>
+                <button class="btn-primary" onclick="window.print()">Download Certificate</button>
+            </div>
         </div>
     </div>
 
