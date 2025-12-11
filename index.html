@@ -1,107 +1,1191 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Safety Assessment - Denar Financial</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Safety Demo – Denar Financial</title>
+
+  <!-- 
+    Brand palette (adjust these to your exact Denar colors):
+    --df-bg:  overall background
+    --df-surface: cards / panels
+    --df-primary: main accent (buttons, highlights)
+    --df-accent: secondary accent
+    --df-text: main text
+  -->
+  <style>
+    :root {
+      --df-bg: #050816;
+      --df-surface: #0f172a;
+      --df-surface-soft: #111827;
+      --df-primary: #38bdf8;
+      --df-accent: #22c55e;
+      --df-danger: #f97316;
+      --df-text: #e5e7eb;
+      --df-muted: #9ca3af;
+      --df-border: #1f2937;
+      --df-radius-lg: 18px;
+      --df-radius-xl: 24px;
+      --df-shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.7);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #0f172a 0, #020617 55%);
+      color: var(--df-text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .page-shell {
+      width: 100%;
+      max-width: 1180px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* Top nav / brand */
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #38bdf8, #0ea5e9 40%, #0369a1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      color: white;
+      box-shadow: 0 10px 24px rgba(56, 189, 248, 0.55);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand-name {
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      font-size: 15px;
+    }
+
+    .brand-tagline {
+      font-size: 12px;
+      color: var(--df-muted);
+    }
+
+    .nav-pill {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      padding: 4px 10px;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--df-muted);
+      backdrop-filter: blur(8px);
+      background: linear-gradient(
+        120deg,
+        rgba(15, 23, 42, 0.85),
+        rgba(15, 23, 42, 0.6)
+      );
+    }
+
+    .nav-pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: radial-gradient(circle, #22c55e, #16a34a);
+      box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.25);
+    }
+
+    /* Layout: hero + agent */
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.1fr);
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        padding: 16px;
+      }
+
+      .main-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    /* Left: copy + metrics */
+
+    .hero-card {
+      background: radial-gradient(circle at top left, #0f172a, #020617 70%);
+      border-radius: var(--df-radius-xl);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      padding: 22px 22px 20px;
+      box-shadow: var(--df-shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--df-muted);
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(10px);
+      align-self: flex-start;
+    }
+
+    .hero-pill span {
+      font-size: 10px;
+    }
+
+    .hero-title {
+      font-size: clamp(26px, 3vw, 30px);
+      font-weight: 650;
+      line-height: 1.15;
+      letter-spacing: 0.01em;
+    }
+
+    .hero-title-gradient {
+      background: linear-gradient(135deg, #38bdf8, #22c55e);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 14px;
+      color: var(--df-muted);
+      max-width: 32rem;
+    }
+
+    .hero-subtitle strong {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .metric-card {
+      border-radius: 16px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      background: radial-gradient(circle at top, #020617, #020617 45%, #020617);
+      padding: 10px 10px 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .metric-label {
+      font-size: 11px;
+      color: var(--df-muted);
+    }
+
+    .metric-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+    }
+
+    .metric-value {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .metric-chip {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      color: var(--df-muted);
+    }
+
+    .metric-emphasis {
+      color: var(--df-accent);
+    }
+
+    .metric-danger {
+      color: var(--df-danger);
+    }
+
+    .hero-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+
+    .hero-cta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      border-radius: 999px;
+      padding: 9px 16px;
+      font-size: 13px;
+      border: none;
+      font-weight: 500;
+      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 14px 30px rgba(56, 189, 248, 0.35);
+      transition: transform 0.12s ease, box-shadow 0.12s ease,
+        filter 0.12s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+      box-shadow: 0 20px 45px rgba(56, 189, 248, 0.5);
+    }
+
+    .btn-secondary {
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--df-text);
+      cursor: pointer;
+      transition: border-color 0.12s ease, background 0.12s ease;
+      white-space: nowrap;
+    }
+
+    .btn-secondary:hover {
+      border-color: rgba(148, 163, 184, 0.85);
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .hero-helper {
+      font-size: 11px;
+      color: var(--df-muted);
+      max-width: 220px;
+    }
+
+    /* Right: Agent */
+
+    .agent-card {
+      border-radius: var(--df-radius-xl);
+      background: radial-gradient(circle at top, #0b1120, #020617 70%);
+      border: 1px solid rgba(30, 64, 175, 0.5);
+      padding: 14px 14px 12px;
+      box-shadow: var(--df-shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .agent-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .agent-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .agent-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: conic-gradient(
+        from 210deg,
+        #22c55e,
+        #38bdf8,
+        #a855f7,
+        #22c55e
+      );
+      padding: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .agent-avatar-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #0f172a, #020617);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .agent-name {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .agent-role {
+      font-size: 11px;
+      color: var(--df-muted);
+    }
+
+    .agent-badge {
+      font-size: 10px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: rgba(15, 118, 110, 0.15);
+      color: #6ee7b7;
+      border: 1px solid rgba(34, 197, 94, 0.45);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .agent-body {
+      border-radius: 16px;
+      background: radial-gradient(circle at top left, #020617, #020617 70%);
+      border: 1px solid rgba(30, 64, 175, 0.45);
+      padding: 10px;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      gap: 8px;
+      min-height: 260px;
+      max-height: 360px;
+    }
+
+    .chat-scroll {
+      overflow-y: auto;
+      padding-right: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .chat-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .chat-scroll::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.6);
+      border-radius: 999px;
+    }
+
+    .chat-row {
+      display: flex;
+      gap: 6px;
+      align-items: flex-start;
+    }
+
+    .chat-row.agent {
+      justify-content: flex-start;
+    }
+
+    .chat-row.user {
+      justify-content: flex-end;
+    }
+
+    .bubble {
+      max-width: 82%;
+      padding: 8px 10px;
+      border-radius: 14px;
+      line-height: 1.4;
+      border: 1px solid transparent;
+    }
+
+    .bubble-agent {
+      background: radial-gradient(circle at top left, #0b1120, #020617);
+      border-color: rgba(37, 99, 235, 0.55);
+      font-size: 12px;
+    }
+
+    .bubble-user {
+      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+      color: white;
+      font-size: 12px;
+      border-color: transparent;
+    }
+
+    .typing-indicator {
+      font-size: 11px;
+      color: var(--df-muted);
+      padding-left: 1px;
+    }
+
+    .chat-input-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .chat-input {
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 999px;
+      border: 1px solid rgba(51, 65, 85, 0.9);
+      padding: 7px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chat-input input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--df-text);
+      font-size: 12px;
+      width: 100%;
+    }
+
+    .chat-input input::placeholder {
+      color: rgba(148, 163, 184, 0.8);
+    }
+
+    .chat-send-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 25px rgba(56, 189, 248, 0.45);
+      transition: transform 0.12s ease, box-shadow 0.12s ease,
+        filter 0.12s ease;
+    }
+
+    .chat-send-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.03);
+      box-shadow: 0 14px 35px rgba(56, 189, 248, 0.65);
+    }
+
+    .agent-footer {
+      font-size: 11px;
+      color: var(--df-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+
+    /* Score summary bar under agent */
+
+    .score-card {
+      margin-top: 3px;
+      border-radius: 16px;
+      border: 1px solid rgba(30, 64, 175, 0.5);
+      background: radial-gradient(circle at top left, #020617, #020617 70%);
+      padding: 10px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.1fr);
+      gap: 10px;
+      align-items: center;
+      font-size: 11px;
+    }
+
+    .score-main-label {
+      font-size: 11px;
+      color: var(--df-muted);
+      margin-bottom: 4px;
+    }
+
+    .score-number {
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .score-chip {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      margin-left: 8px;
+    }
+
+    .score-pill-ok {
+      color: var(--df-accent);
+      border-color: rgba(34, 197, 94, 0.6);
+    }
+
+    .score-pill-risk {
+      color: var(--df-danger);
+      border-color: rgba(249, 115, 22, 0.75);
+    }
+
+    .score-bar-shell {
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      overflow: hidden;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      margin-top: 6px;
+    }
+
+    .score-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #f97316, #facc15, #22c55e);
+      transition: width 0.45s ease;
+    }
+
+    .score-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .score-tag {
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(51, 65, 85, 0.9);
+      color: var(--df-muted);
+      font-size: 10px;
+    }
+
+    .score-right {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: flex-start;
+    }
+
+    .score-right strong {
+      color: var(--df-text);
+      font-weight: 500;
+    }
+
+    .score-callout {
+      font-size: 11px;
+      color: var(--df-muted);
+    }
+
+    .score-cta {
+      font-size: 11px;
+      margin-top: 2px;
+    }
+
+    .score-cta a {
+      color: #38bdf8;
+      text-decoration: none;
+    }
+
+    .score-cta a:hover {
+      text-decoration: underline;
+    }
+
+    /* Footer */
+
+    .page-footer {
+      font-size: 11px;
+      color: var(--df-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .page-footer a {
+      color: var(--df-muted);
+      text-decoration: none;
+    }
+
+    .page-footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-    <div class="header">
-        <div class="logo">Denar Financial</div>
-        <div class="tagline">AI Powered Safety Compliance & Assessment</div>
-    </div>
+  <div class="page-shell">
+    <header class="nav">
+      <div class="brand">
+        <div class="brand-mark">DF</div>
+        <div class="brand-text">
+          <div class="brand-name">Denar Financial</div>
+          <div class="brand-tagline">AI-Powered Safety & Risk Readiness</div>
+        </div>
+      </div>
+      <div class="nav-pill">
+        <span class="nav-pill-dot"></span>
+        <span>Live Safety Readiness Demo</span>
+      </div>
+    </header>
 
-    <div class="container">
-        <!-- Progress Bar -->
-        <div class="progress-container">
-            <div class="progress-bar" id="progressBar"></div>
-            <div class="progress-text" id="progressText">Question 1 of 34</div>
+    <main class="main-grid">
+      <!-- Left: copy -->
+      <section class="hero-card">
+        <div class="hero-pill">
+          <span>Built for HVAC, trades & growing teams</span>
+        </div>
+        <h1 class="hero-title">
+          Safety agent for
+          <span class="hero-title-gradient">small & mid-size crews.</span>
+        </h1>
+        <p class="hero-subtitle">
+          In under three minutes, this agent snapshots your team’s
+          <strong>safety readiness, documentation gaps,</strong> and
+          <strong>high-risk habits</strong> – so you know where to tighten
+          things before the next incident or inspection.
+        </p>
+
+        <div class="hero-metrics">
+          <div class="metric-card">
+            <div class="metric-label">Estimated Safety Readiness</div>
+            <div class="metric-main">
+              <div class="metric-value" id="metricScore">– / 100</div>
+              <div class="metric-chip" id="metricRiskLabel">Not assessed</div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Crew size focus</div>
+            <div class="metric-main">
+              <div class="metric-value">5–250</div>
+              <div class="metric-chip">Field, shop & office</div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">What you get</div>
+            <div class="metric-main">
+              <div class="metric-value metric-emphasis">3 key fixes</div>
+              <div class="metric-chip metric-danger">Before the next near-miss</div>
+            </div>
+          </div>
         </div>
 
-        <!-- Assessment Container -->
-        <div class="assessment-container" id="assessmentContainer">
-            <div class="question-card">
-                <div class="module-label" id="moduleLabel">Background Information</div>
-                <h2 class="question-text" id="questionText"></h2>
-                
-                <!-- Answer Options Container -->
-                <div class="options-container" id="optionsContainer"></div>
+        <div class="hero-footer">
+          <div class="hero-cta">
+            <button class="btn-primary" id="ctaStart">
+              Start safety scan
+            </button>
+            <button class="btn-secondary" id="ctaBook">
+              Talk about a full rollout
+            </button>
+          </div>
+          <p class="hero-helper">
+            No login, no forms. Answer honestly – this demo never exposes any customer details.
+          </p>
+        </div>
+      </section>
 
-                <!-- Navigation Buttons -->
-                <div class="button-container">
-                    <button class="btn-secondary" id="backBtn" style="display:none;">Back</button>
-                    <button class="btn-primary" id="nextBtn" disabled>Next</button>
-                </div>
+      <!-- Right: agent -->
+      <section class="agent-card">
+        <div class="agent-header">
+          <div class="agent-header-left">
+            <div class="agent-avatar">
+              <div class="agent-avatar-inner">SA</div>
             </div>
+            <div>
+              <div class="agent-name">Safety Agent</div>
+              <div class="agent-role">For small & mid-size businesses</div>
+            </div>
+          </div>
+          <div class="agent-badge">Safety Snapshot</div>
         </div>
 
-        <!-- Results Dashboard (Hidden until complete) -->
-        <div class="results-container hidden" id="resultsContainer">
-            <div class="results-header">
-                <h1>Safety Assessment Complete</h1>
-                <div class="overall-score">
-                    <div class="score-circle">
-                        <span class="score-value" id="overallScore">0</span>
-                        <span class="score-label">/100</span>
-                    </div>
-                    <div class="certification-status" id="certStatus">
-                        <h3 id="certResult">CERTIFIED</h3>
-                        <p id="certMessage">You have successfully completed the safety assessment</p>
-                    </div>
-                </div>
+        <div class="agent-body">
+          <div class="chat-scroll" id="chat">
+            <!-- Messages injected via JS -->
+          </div>
+
+          <div>
+            <div class="chat-input-row">
+              <div class="chat-input">
+                <input
+                  id="userInput"
+                  type="text"
+                  placeholder="Type your answer & press Enter…"
+                  autocomplete="off"
+                />
+              </div>
+              <button class="chat-send-btn" id="sendBtn" aria-label="Send">
+                ➤
+              </button>
             </div>
-
-            <div class="results-grid">
-                <!-- Module Scores -->
-                <div class="result-card">
-                    <h3>Module Performance</h3>
-                    <canvas id="radarChart"></canvas>
-                </div>
-
-                <!-- Risk Assessment -->
-                <div class="result-card">
-                    <h3>Risk Profile</h3>
-                    <div class="risk-indicator" id="riskIndicator">
-                        <div class="risk-level" id="riskLevel">MODERATE</div>
-                        <div class="risk-score" id="riskScore">3.5 / 10</div>
-                    </div>
-                    <div class="risk-factors" id="riskFactors"></div>
-                </div>
-
-                <!-- Behavioral Analysis -->
-                <div class="result-card">
-                    <h3>Behavioral Indicators</h3>
-                    <div id="behavioralScores"></div>
-                </div>
-
-                <!-- Recommendations -->
-                <div class="result-card">
-                    <h3>Recommended Actions</h3>
-                    <ul id="recommendations"></ul>
-                </div>
-
-                <!-- Detailed Breakdown -->
-                <div class="result-card full-width">
-                    <h3>Detailed Score Breakdown</h3>
-                    <div id="scoreBreakdown"></div>
-                </div>
-            </div>
-
-            <!-- Employee Certification -->
-            <div class="certification-card">
-                <h3>📋 Employee Certification</h3>
-                <div id="certDetails"></div>
-                <button class="btn-primary" onclick="window.print()">Download Certificate</button>
-            </div>
+            <div class="typing-indicator" id="typingIndicator"></div>
+          </div>
         </div>
-    </div>
 
-    <div class="footer">
-        <p>© 2025 Denar Financial | <a href="https://denarfinancial.com">denarfinancial.com</a> | consulting@denarfinancial.com</p>
-    </div>
+        <div class="agent-footer">
+          <span id="stepIndicator">Question 1 of 6</span>
+          <span>Optimized for honest, fast answers – not legal advice.</span>
+        </div>
 
-    <script src="script.js"></script>
+        <div class="score-card">
+          <div>
+            <div class="score-main-label">Live safety readiness estimate</div>
+            <div>
+              <span class="score-number" id="scoreDisplay">–</span>
+              <span class="score-chip score-pill-ok" id="scoreStatus">Start the scan</span>
+            </div>
+            <div class="score-bar-shell">
+              <div class="score-bar-fill" id="scoreBar"></div>
+            </div>
+            <div class="score-tags" id="scoreTags">
+              <span class="score-tag">Orientation</span>
+              <span class="score-tag">Jobsite habits</span>
+              <span class="score-tag">Documentation</span>
+            </div>
+          </div>
+          <div class="score-right">
+            <div class="score-callout" id="scoreCallout">
+              Answer a few questions & we’ll flag your biggest exposure areas.
+            </div>
+            <div class="score-cta">
+              Ready for a tailored rollout? Email
+              <a href="mailto:consulting@denarfinancial.com">consulting@denarfinancial.com</a>
+              and mention “Safety Demo”.
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="page-footer">
+      <span>© 2025 Denar Financial – Safety & treasury solutions for growing teams.</span>
+      <span>
+        <a href="https://denarfinancial.com" target="_blank" rel="noreferrer"
+          >denarfinancial.com</a
+        >
+      </span>
+    </footer>
+  </div>
+
+  <script>
+    // Very lightweight "agent" logic.
+    // A simple decision tree that builds a score and human-readable summary.
+
+    const chatEl = document.getElementById("chat");
+    const inputEl = document.getElementById("userInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const typingEl = document.getElementById("typingIndicator");
+    const stepIndicatorEl = document.getElementById("stepIndicator");
+
+    const scoreDisplayEl = document.getElementById("scoreDisplay");
+    const scoreBarEl = document.getElementById("scoreBar");
+    const scoreStatusEl = document.getElementById("scoreStatus");
+    const scoreTagsEl = document.getElementById("scoreTags");
+    const scoreCalloutEl = document.getElementById("scoreCallout");
+    const metricScoreEl = document.getElementById("metricScore");
+    const metricRiskLabelEl = document.getElementById("metricRiskLabel");
+
+    const ctaStart = document.getElementById("ctaStart");
+    const ctaBook = document.getElementById("ctaBook");
+
+    const state = {
+      step: 0,
+      answers: {
+        name: "",
+        role: "",
+        headcount: "",
+        incidents: "",
+        habits: "",
+        documentation: "",
+      },
+      score: 0,
+      completed: false,
+    };
+
+    const questions = [
+      {
+        id: "name",
+        label: "First name",
+        text: "To start, what’s your first name and your role in the business?",
+        helper:
+          "Example: “Chris, owner” or “Monica, ops manager for a 12-person HVAC shop.”",
+        parse: (raw) => {
+          state.answers.name = raw.split(",")[0].trim();
+          state.answers.role = raw.trim();
+          return 8;
+        },
+      },
+      {
+        id: "headcount",
+        label: "Crew size",
+        text: "Roughly how many people do you have working in the field or shop on a busy day?",
+        helper: "You can ballpark it – 6, 15, 40, etc.",
+        parse: (raw) => {
+          const num = parseInt(raw.replace(/[^0-9]/g, ""), 10);
+          state.answers.headcount = isNaN(num) ? raw : num;
+          if (isNaN(num)) return 10;
+          if (num <= 10) return 15;
+          if (num <= 40) return 18;
+          return 16;
+        },
+      },
+      {
+        id: "incidents",
+        label: "Recent incidents",
+        text: "In the last 12 months, how many recordable incidents or scary near-misses have you had?",
+        helper:
+          "It’s fine to be approximate – “none”, “a couple”, “more than we’d like”.",
+        parse: (raw) => {
+          const lower = raw.toLowerCase();
+          state.answers.incidents = lower;
+          if (lower.includes("none") || lower.includes("zero") || lower.includes("0")) {
+            return 22;
+          }
+          if (lower.includes("1") || lower.includes("one") || lower.includes("couple")) {
+            return 18;
+          }
+          return 12;
+        },
+      },
+      {
+        id: "habits",
+        label: "Jobsite habits",
+        text: "Be honest: what’s the most common safety shortcut you see your crew take on a job?",
+        helper: "Example: no eye protection, rushing ladders, not locking out power, etc.",
+        parse: (raw) => {
+          const lower = raw.toLowerCase();
+          state.answers.habits = lower;
+          if (lower.includes("none") || lower.includes("we’re strict")) {
+            return 20;
+          }
+          if (lower.includes("ppe") || lower.includes("glasses") || lower.includes("hearing")) {
+            return 15;
+          }
+          if (lower.includes("ladder") || lower.includes("roof") || lower.includes("fall")) {
+            return 10;
+          }
+          return 12;
+        },
+      },
+      {
+        id: "documentation",
+        label: "Documentation",
+        text: "How buttoned-up is your safety paperwork – training sign-offs, toolbox talks, incident logs?",
+        helper:
+          "You can answer with something like “all in a binder”, “a mix of paper and text threads”, or “we track everything”.",
+        parse: (raw) => {
+          const lower = raw.toLowerCase();
+          state.answers.documentation = lower;
+          if (lower.includes("track everything") || lower.includes("system")) {
+            return 22;
+          }
+          if (lower.includes("binder") || lower.includes("paper")) {
+            return 16;
+          }
+          if (lower.includes("text") || lower.includes("nowhere") || lower.includes("don’t")) {
+            return 10;
+          }
+          return 14;
+        },
+      },
+      {
+        id: "priority",
+        label: "Priority",
+        text: "If this agent could fix one thing first – what worries you most about safety right now?",
+        helper:
+          "Think: “new hires”, “OSHA exposure”, “documentation trail”, “habits in the field”, etc.",
+        parse: (raw) => {
+          state.answers.priority = raw.trim();
+          return 18;
+        },
+      },
+    ];
+
+    function scrollChatToBottom() {
+      chatEl.scrollTop = chatEl.scrollHeight;
+    }
+
+    function addMessage({ text, from = "agent" }) {
+      const row = document.createElement("div");
+      row.className = `chat-row ${from}`;
+
+      const bubble = document.createElement("div");
+      bubble.className =
+        "bubble " + (from === "agent" ? "bubble-agent" : "bubble-user");
+      bubble.innerHTML = text;
+
+      row.appendChild(bubble);
+      chatEl.appendChild(row);
+      scrollChatToBottom();
+    }
+
+    function setTyping(text) {
+      typingEl.textContent = text || "";
+    }
+
+    function formatStepIndicator() {
+      const total = questions.length;
+      const current = Math.min(state.step + 1, total);
+      stepIndicatorEl.textContent = `Question ${current} of ${total}`;
+    }
+
+    function updateScoreUI() {
+      const score = state.score;
+      if (score <= 0) {
+        scoreDisplayEl.textContent = "–";
+        metricScoreEl.textContent = "– / 100";
+        scoreBarEl.style.width = "0%";
+        scoreStatusEl.textContent = "Start the scan";
+        scoreStatusEl.classList.remove("score-pill-risk");
+        scoreStatusEl.classList.add("score-pill-ok");
+        metricRiskLabelEl.textContent = "Not assessed";
+        return;
+      }
+
+      const maxScore = questions.length * 25; // theoretical upper bound
+      const normalized = Math.min(100, Math.round((score / maxScore) * 100));
+
+      scoreDisplayEl.textContent = `${normalized}`;
+      metricScoreEl.textContent = `${normalized} / 100`;
+      scoreBarEl.style.width = `${normalized}%`;
+
+      let statusLabel;
+      let riskLabel;
+      let chipClass = "score-pill-ok";
+
+      if (normalized >= 80) {
+        statusLabel = "Solid foundation";
+        riskLabel = "LOW–MODERATE RISK";
+      } else if (normalized >= 55) {
+        statusLabel = "Room to tighten";
+        riskLabel = "MODERATE RISK";
+        chipClass = "score-pill-risk";
+      } else {
+        statusLabel = "Exposed if something goes wrong";
+        riskLabel = "HIGH RISK";
+        chipClass = "score-pill-risk";
+      }
+
+      scoreStatusEl.textContent = statusLabel;
+      scoreStatusEl.classList.remove("score-pill-ok", "score-pill-risk");
+      scoreStatusEl.classList.add(chipClass);
+      metricRiskLabelEl.textContent = riskLabel;
+
+      // Update tags + narrative
+      scoreTagsEl.innerHTML = "";
+      const tags = [];
+
+      if (state.answers.incidents.includes("none")) {
+        tags.push("Few incidents (good)");
+      } else {
+        tags.push("Recent incidents / near-misses");
+      }
+
+      if (state.answers.documentation) {
+        tags.push("Documentation habits");
+      }
+
+      if (state.answers.habits) {
+        tags.push("Jobsite shortcuts");
+      }
+
+      if (state.answers.priority) {
+        tags.push("Top concern: " + state.answers.priority);
+      }
+
+      tags.forEach((t) => {
+        const span = document.createElement("span");
+        span.className = "score-tag";
+        span.textContent = t;
+        scoreTagsEl.appendChild(span);
+      });
+
+      const name = state.answers.name || "your crew";
+      if (!state.completed) {
+        scoreCalloutEl.textContent =
+          `Right now, ${name} likely sits in the ${riskLabel.toLowerCase()} band. ` +
+          `Finish the last question so we can recommend your first 3 fixes.`;
+      } else {
+        scoreCalloutEl.textContent =
+          `${name} is operating in the ${riskLabel.toLowerCase()} band. ` +
+          `We’ll prioritize 3 concrete moves across new hire onboarding, jobsite habits, and documentation trail.`;
+      }
+    }
+
+    function askCurrentQuestion() {
+      const q = questions[state.step];
+      if (!q) {
+        return;
+      }
+      formatStepIndicator();
+
+      addMessage({
+        from: "agent",
+        text:
+          `<strong>${q.label}.</strong> ${q.text}` +
+          (q.helper ? `<br><span style="color:#9ca3af">${q.helper}</span>` : ""),
+      });
+    }
+
+    function handleUserInput(raw) {
+      if (!raw.trim()) return;
+      const text = raw.trim();
+
+      // Show user message
+      addMessage({
+        from: "user",
+        text: text,
+      });
+
+      inputEl.value = "";
+      setTyping("Thinking…");
+
+      const currentQ = questions[state.step];
+      let delta = 0;
+      if (currentQ && typeof currentQ.parse === "function") {
+        try {
+          delta = currentQ.parse(text) || 0;
+        } catch (e) {
+          delta = 10;
+        }
+      } else {
+        delta = 10;
+      }
+      state.score += delta;
+      updateScoreUI();
+
+      setTimeout(() => {
+        setTyping("");
+        state.step += 1;
+
+        if (state.step < questions.length) {
+          askCurrentQuestion();
+        } else if (!state.completed) {
+          state.completed = true;
+          formatStepIndicator();
+          summarizeAssessment();
+        }
+      }, 450);
+    }
+
+    function summarizeAssessment() {
+      const name = state.answers.name || "your team";
+      const headcount = state.answers.headcount || "your current headcount";
+      const incidents = state.answers.incidents || "your recent incident pattern";
+      const priority = state.answers.priority || "your current concern";
+
+      const summaryLines = [
+        `<strong>Here’s the snapshot I’d give you in plain English:</strong>`,
+        "",
+        `• <strong>Who you are:</strong> ${state.answers.role || name}. Roughly ${headcount} people in the field/shop.`,
+        `• <strong>Recent reality:</strong> ${incidents}.`,
+        `• <strong>Biggest exposure you flagged:</strong> ${priority}.`,
+        "",
+        `From here, a full rollout looks like:`,
+        `1) A tighter, repeatable new hire safety onboarding,`,
+        `2) A simple way to detect & coach around jobsite shortcuts, and`,
+        `3) A digital trail of training + incidents you can pull in seconds.`,
+      ];
+
+      addMessage({
+        from: "agent",
+        text: summaryLines.join("<br>"),
+      });
+
+      addMessage({
+        from: "agent",
+        text:
+          `If you’d like, I can turn this into a concrete rollout plan for your shop ` +
+          `– reply with your email here or reach out at <strong>consulting@denarfinancial.com</strong>.`,
+      });
+
+      updateScoreUI();
+    }
+
+    // Event wiring
+
+    inputEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleUserInput(inputEl.value);
+      }
+    });
+
+    sendBtn.addEventListener("click", () => {
+      handleUserInput(inputEl.value);
+    });
+
+    ctaStart.addEventListener("click", () => {
+      if (state.step === 0 && chatEl.children.length === 0) {
+        // Kick off fresh
+        initConversation(true);
+      } else {
+        inputEl.focus();
+      }
+    });
+
+    ctaBook.addEventListener("click", () => {
+      window.location.href = "mailto:consulting@denarfinancial.com?subject=Safety%20Demo%20Rollout";
+    });
+
+    function initConversation(fromButton) {
+      chatEl.innerHTML = "";
+      state.step = 0;
+      state.score = 0;
+      state.completed = false;
+      Object.keys(state.answers).forEach((k) => (state.answers[k] = ""));
+      updateScoreUI();
+      formatStepIndicator();
+
+      addMessage({
+        from: "agent",
+        text:
+          fromButton
+            ? `Great. I’ll ask 5-6 quick questions about your crew, recent incidents, and habits. Answer like it’s just you and me – not a lawyer.`
+            : `I’ll ask 5-6 quick questions about your crew, recent incidents, and habits. Answer like it’s just you and me – not a lawyer.`,
+      });
+
+      askCurrentQuestion();
+    }
+
+    // Initial greeting
+    initConversation(false);
+  </script>
 </body>
 </html>
