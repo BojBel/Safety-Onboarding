@@ -5,640 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Safety Demo – Denar Financial</title>
 
-  <!-- Brand palette: tweak to match exact Denar colors -->
-  <style>
-    :root {
-      --df-bg: #050816;
-      --df-surface: #0f172a;
-      --df-surface-soft: #111827;
-      --df-primary: #38bdf8;
-      --df-accent: #22c55e;
-      --df-danger: #f97316;
-      --df-text: #e5e7eb;
-      --df-muted: #9ca3af;
-      --df-border: #1f2937;
-      --df-radius-lg: 18px;
-      --df-radius-xl: 24px;
-      --df-shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.7);
-    }
+  <!-- External stylesheet with your dark Denar theme -->
+  <link rel="stylesheet" href="style.css" />
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-        "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top left, #0f172a 0, #020617 55%);
-      color: var(--df-text);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      padding: 24px;
-    }
-
-    .page-shell {
-      width: 100%;
-      max-width: 1180px;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .brand-mark {
-      width: 32px;
-      height: 32px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 20%, #38bdf8, #0ea5e9 40%, #0369a1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 16px;
-      color: white;
-      box-shadow: 0 10px 24px rgba(56, 189, 248, 0.55);
-    }
-
-    .brand-text {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .brand-name {
-      font-weight: 600;
-      letter-spacing: 0.03em;
-      font-size: 15px;
-    }
-
-    .brand-tagline {
-      font-size: 12px;
-      color: var(--df-muted);
-    }
-
-    .nav-pill {
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      padding: 4px 10px;
-      font-size: 11px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--df-muted);
-      backdrop-filter: blur(8px);
-      background: linear-gradient(
-        120deg,
-        rgba(15, 23, 42, 0.85),
-        rgba(15, 23, 42, 0.6)
-      );
-    }
-
-    .nav-pill-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: radial-gradient(circle, #22c55e, #16a34a);
-      box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.25);
-    }
-
-    .main-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.1fr);
-      gap: 22px;
-      align-items: stretch;
-    }
-
-    @media (max-width: 900px) {
-      body {
-        padding: 16px;
-      }
-
-      .main-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
-    .hero-card {
-      background: radial-gradient(circle at top left, #0f172a, #020617 70%);
-      border-radius: var(--df-radius-xl);
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      padding: 22px 22px 20px;
-      box-shadow: var(--df-shadow-soft);
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .hero-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 11px;
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      color: var(--df-muted);
-      background: rgba(15, 23, 42, 0.8);
-      backdrop-filter: blur(10px);
-      align-self: flex-start;
-    }
-
-    .hero-title {
-      font-size: clamp(26px, 3vw, 30px);
-      font-weight: 650;
-      line-height: 1.15;
-      letter-spacing: 0.01em;
-    }
-
-    .hero-title-gradient {
-      background: linear-gradient(135deg, #38bdf8, #22c55e);
-      -webkit-background-clip: text;
-      color: transparent;
-    }
-
-    .hero-subtitle {
-      font-size: 14px;
-      color: var(--df-muted);
-      max-width: 32rem;
-    }
-
-    .hero-subtitle strong {
-      color: #e5e7eb;
-      font-weight: 500;
-    }
-
-    .hero-metrics {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 8px;
-    }
-
-    .metric-card {
-      border-radius: 16px;
-      border: 1px solid rgba(31, 41, 55, 0.9);
-      background: radial-gradient(circle at top, #020617, #020617 45%, #020617);
-      padding: 10px 10px 9px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .metric-label {
-      font-size: 11px;
-      color: var(--df-muted);
-    }
-
-    .metric-main {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 4px;
-    }
-
-    .metric-value {
-      font-size: 16px;
-      font-weight: 600;
-    }
-
-    .metric-chip {
-      font-size: 10px;
-      padding: 2px 7px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.55);
-      color: var(--df-muted);
-    }
-
-    .metric-emphasis {
-      color: var(--df-accent);
-    }
-
-    .metric-danger {
-      color: var(--df-danger);
-    }
-
-    .hero-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      margin-top: 4px;
-      flex-wrap: wrap;
-    }
-
-    .hero-cta {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .btn-primary {
-      border-radius: 999px;
-      padding: 9px 16px;
-      font-size: 13px;
-      border: none;
-      font-weight: 500;
-      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
-      color: white;
-      cursor: pointer;
-      box-shadow: 0 14px 30px rgba(56, 189, 248, 0.35);
-      transition: transform 0.12s ease, box-shadow 0.12s ease,
-        filter 0.12s ease;
-      white-space: nowrap;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.05);
-      box-shadow: 0 20px 45px rgba(56, 189, 248, 0.5);
-    }
-
-    .btn-secondary {
-      border-radius: 999px;
-      padding: 8px 14px;
-      font-size: 12px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      background: rgba(15, 23, 42, 0.8);
-      color: var(--df-text);
-      cursor: pointer;
-      transition: border-color 0.12s ease, background 0.12s ease;
-      white-space: nowrap;
-    }
-
-    .btn-secondary:hover {
-      border-color: rgba(148, 163, 184, 0.85);
-      background: rgba(15, 23, 42, 0.95);
-    }
-
-    .hero-helper {
-      font-size: 11px;
-      color: var(--df-muted);
-      max-width: 220px;
-    }
-
-    .agent-card {
-      border-radius: var(--df-radius-xl);
-      background: radial-gradient(circle at top, #0b1120, #020617 70%);
-      border: 1px solid rgba(30, 64, 175, 0.5);
-      padding: 14px 14px 12px;
-      box-shadow: var(--df-shadow-soft);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .agent-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .agent-header-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .agent-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 999px;
-      background: conic-gradient(
-        from 210deg,
-        #22c55e,
-        #38bdf8,
-        #a855f7,
-        #22c55e
-      );
-      padding: 2px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .agent-avatar-inner {
-      width: 100%;
-      height: 100%;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 20%, #0f172a, #020617);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-    }
-
-    .agent-name {
-      font-size: 13px;
-      font-weight: 500;
-    }
-
-    .agent-role {
-      font-size: 11px;
-      color: var(--df-muted);
-    }
-
-    .agent-badge {
-      font-size: 10px;
-      padding: 3px 7px;
-      border-radius: 999px;
-      background: rgba(15, 118, 110, 0.15);
-      color: #6ee7b7;
-      border: 1px solid rgba(34, 197, 94, 0.45);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    .agent-body {
-      border-radius: 16px;
-      background: radial-gradient(circle at top left, #020617, #020617 70%);
-      border: 1px solid rgba(30, 64, 175, 0.45);
-      padding: 10px;
-      display: grid;
-      grid-template-rows: 1fr auto;
-      gap: 8px;
-      min-height: 260px;
-      max-height: 360px;
-    }
-
-    .chat-scroll {
-      overflow-y: auto;
-      padding-right: 4px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      font-size: 13px;
-    }
-
-    .chat-scroll::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    .chat-scroll::-webkit-scrollbar-thumb {
-      background: rgba(148, 163, 184, 0.6);
-      border-radius: 999px;
-    }
-
-    .chat-row {
-      display: flex;
-      gap: 6px;
-      align-items: flex-start;
-    }
-
-    .chat-row.agent {
-      justify-content: flex-start;
-    }
-
-    .chat-row.user {
-      justify-content: flex-end;
-    }
-
-    .bubble {
-      max-width: 82%;
-      padding: 8px 10px;
-      border-radius: 14px;
-      line-height: 1.4;
-      border: 1px solid transparent;
-    }
-
-    .bubble-agent {
-      background: radial-gradient(circle at top left, #0b1120, #020617);
-      border-color: rgba(37, 99, 235, 0.55);
-      font-size: 12px;
-    }
-
-    .bubble-user {
-      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
-      color: white;
-      font-size: 12px;
-      border-color: transparent;
-    }
-
-    .typing-indicator {
-      font-size: 11px;
-      color: var(--df-muted);
-      padding-left: 1px;
-    }
-
-    .chat-input-row {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .chat-input {
-      background: rgba(15, 23, 42, 0.9);
-      border-radius: 999px;
-      border: 1px solid rgba(51, 65, 85, 0.9);
-      padding: 7px 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .chat-input input {
-      background: transparent;
-      border: none;
-      outline: none;
-      color: var(--df-text);
-      font-size: 12px;
-      width: 100%;
-    }
-
-    .chat-input input::placeholder {
-      color: rgba(148, 163, 184, 0.8);
-    }
-
-    .chat-send-btn {
-      width: 32px;
-      height: 32px;
-      border-radius: 999px;
-      border: none;
-      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
-      color: white;
-      cursor: pointer;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 10px 25px rgba(56, 189, 248, 0.45);
-      transition: transform 0.12s ease, box-shadow 0.12s ease,
-        filter 0.12s ease;
-    }
-
-    .chat-send-btn:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.03);
-      box-shadow: 0 14px 35px rgba(56, 189, 248, 0.65);
-    }
-
-    .agent-footer {
-      font-size: 11px;
-      color: var(--df-muted);
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 2px;
-    }
-
-    .score-card {
-      margin-top: 3px;
-      border-radius: 16px;
-      border: 1px solid rgba(30, 64, 175, 0.5);
-      background: radial-gradient(circle at top left, #020617, #020617 70%);
-      padding: 10px;
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
-      gap: 10px;
-      align-items: center;
-      font-size: 11px;
-    }
-
-    @media (max-width: 900px) {
-      .score-card {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
-    .score-main-label {
-      font-size: 11px;
-      color: var(--df-muted);
-      margin-bottom: 4px;
-    }
-
-    .score-number {
-      font-size: 22px;
-      font-weight: 600;
-    }
-
-    .score-chip {
-      font-size: 10px;
-      padding: 2px 7px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      margin-left: 8px;
-    }
-
-    .score-pill-ok {
-      color: var(--df-accent);
-      border-color: rgba(34, 197, 94, 0.6);
-    }
-
-    .score-pill-risk {
-      color: var(--df-danger);
-      border-color: rgba(249, 115, 22, 0.75);
-    }
-
-    .score-bar-shell {
-      width: 100%;
-      height: 6px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.9);
-      overflow: hidden;
-      border: 1px solid rgba(31, 41, 55, 0.9);
-      margin-top: 6px;
-    }
-
-    .score-bar-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #f97316, #facc15, #22c55e);
-      transition: width 0.45s ease;
-    }
-
-    .score-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 6px;
-    }
-
-    .score-tag {
-      padding: 3px 7px;
-      border-radius: 999px;
-      border: 1px solid rgba(51, 65, 85, 0.9);
-      color: var(--df-muted);
-      font-size: 10px;
-    }
-
-    .score-right {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      align-items: flex-start;
-    }
-
-    .score-callout {
-      font-size: 11px;
-      color: var(--df-muted);
-      margin-top: 4px;
-    }
-
-    .score-cta {
-      font-size: 11px;
-      margin-top: 2px;
-    }
-
-    .score-cta a {
-      color: #38bdf8;
-      text-decoration: none;
-    }
-
-    .score-cta a:hover {
-      text-decoration: underline;
-    }
-
-    .chart-container {
-      width: 100%;
-      height: 170px;
-      position: relative;
-    }
-
-    .chart-container canvas {
-      width: 100% !important;
-      height: 100% !important;
-    }
-
-    .page-footer {
-      font-size: 11px;
-      color: var(--df-muted);
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 4px;
-    }
-
-    .page-footer a {
-      color: var(--df-muted);
-      text-decoration: none;
-    }
-
-    .page-footer a:hover {
-      text-decoration: underline;
-    }
-  </style>
-
-  <!-- Chart.js for radar chart -->
+  <!-- Chart.js for the radar chart -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -653,24 +23,24 @@
       </div>
       <div class="nav-pill">
         <span class="nav-pill-dot"></span>
-        <span>Live Safety Readiness Demo</span>
+        <span>Interactive safety readiness profile</span>
       </div>
     </header>
 
     <main class="main-grid">
+      <!-- LEFT: hero / description -->
       <section class="hero-card">
         <div class="hero-pill">
-          <span>Built for HVAC, trades & growing teams</span>
+          <span>AI agent that maps your safety risks into a visual, decision-ready profile.</span>
         </div>
         <h1 class="hero-title">
-          Safety agent for
-          <span class="hero-title-gradient">small & mid-size crews.</span>
+          Turn scattered safety habits into a
+          <span class="hero-title-gradient">clear risk picture.</span>
         </h1>
         <p class="hero-subtitle">
-          In under three minutes, this agent snapshots your team’s
-          <strong>safety readiness, documentation gaps,</strong> and
-          <strong>high-risk habits</strong> – so you know where to tighten
-          things before the next incident or inspection.
+          In a few questions, this agent scores your team’s
+          <strong>incidents, habits, documentation,</strong> and
+          <strong>safety culture</strong> – then plots it on a radar map you can act on.
         </p>
 
         <div class="hero-metrics">
@@ -682,16 +52,16 @@
             </div>
           </div>
           <div class="metric-card">
-            <div class="metric-label">Crew size focus</div>
+            <div class="metric-label">Best for</div>
             <div class="metric-main">
-              <div class="metric-value">5–250</div>
+              <div class="metric-value">5–250 staff</div>
               <div class="metric-chip">Field, shop & office</div>
             </div>
           </div>
           <div class="metric-card">
-            <div class="metric-label">What you get</div>
+            <div class="metric-label">What you see</div>
             <div class="metric-main">
-              <div class="metric-value metric-emphasis">Visual risk profile</div>
+              <div class="metric-value metric-emphasis">Live radar view</div>
               <div class="metric-chip metric-danger">Before the next near-miss</div>
             </div>
           </div>
@@ -707,11 +77,12 @@
             </button>
           </div>
           <p class="hero-helper">
-            No login, no forms. Answer honestly – this demo never exposes any customer details.
+            No login, no forms. Answer like it’s a real conversation, not a legal document.
           </p>
         </div>
       </section>
 
+      <!-- RIGHT: agent + chart -->
       <section class="agent-card">
         <div class="agent-header">
           <div class="agent-header-left">
@@ -748,7 +119,7 @@
         </div>
 
         <div class="agent-footer">
-          <span id="stepIndicator">Question 1 of 6</span>
+          <span id="stepIndicator">Question 1 of 10</span>
           <span>Fast, directional read – not legal advice.</span>
         </div>
 
@@ -763,9 +134,10 @@
               <div class="score-bar-fill" id="scoreBar"></div>
             </div>
             <div class="score-tags" id="scoreTags">
-              <span class="score-tag">Orientation</span>
-              <span class="score-tag">Jobsite habits</span>
+              <span class="score-tag">Incidents</span>
+              <span class="score-tag">Habits</span>
               <span class="score-tag">Documentation</span>
+              <span class="score-tag">Culture</span>
             </div>
           </div>
           <div class="score-right">
@@ -773,7 +145,7 @@
               <canvas id="radarChart"></canvas>
             </div>
             <div class="score-callout" id="scoreCallout">
-              Answer a few questions and we’ll map your risk across incidents, habits, documentation, and culture.
+              Answer a few questions and we’ll map your risk across incidents, habits, documentation, and safety culture.
             </div>
             <div class="score-cta">
               Ready for a tailored rollout? Email
@@ -795,6 +167,7 @@
     </footer>
   </div>
 
+  <!-- Agent logic + scoring + radar chart -->
   <script>
     const chatEl = document.getElementById("chat");
     const inputEl = document.getElementById("userInput");
@@ -822,6 +195,10 @@
         incidents: "",
         habits: "",
         documentation: "",
+        reporting: "",
+        training: "",
+        ppe: "",
+        supervision: "",
         priority: "",
       },
       score: 0,
@@ -835,10 +212,10 @@
     };
 
     const DIM_MAX = {
-      incidents: 40,
-      habits: 40,
-      documentation: 40,
-      culture: 40,
+      incidents: 60,
+      habits: 60,
+      documentation: 60,
+      culture: 60,
     };
 
     let radarChart = null;
@@ -846,7 +223,7 @@
     const questions = [
       {
         id: "name",
-        label: "First name",
+        label: "Who am I talking to",
         text: "To start, what’s your first name and your role in the business?",
         helper: "Example: “Chris, owner” or “Monica, ops manager for a 12-person HVAC shop.”",
         parse: (raw) => {
@@ -889,69 +266,156 @@
           const lower = raw.toLowerCase();
           state.answers.incidents = lower;
           if (lower.includes("none") || lower.includes("zero") || lower.includes("0")) {
-            state.dims.incidents += 35;
+            state.dims.incidents += 40;
             return 22;
           }
           if (lower.includes("1") || lower.includes("one") || lower.includes("couple")) {
-            state.dims.incidents += 23;
+            state.dims.incidents += 28;
             return 18;
           }
-          state.dims.incidents += 12;
+          state.dims.incidents += 16;
           return 12;
         },
       },
       {
         id: "habits",
-        label: "Jobsite habits",
+        label: "Jobsite shortcuts",
         text: "Be honest: what’s the most common safety shortcut you see your crew take on a job?",
         helper: "Example: no eye protection, rushing ladders, not locking out power, etc.",
         parse: (raw) => {
           const lower = raw.toLowerCase();
           state.answers.habits = lower;
           if (lower.includes("none") || lower.includes("strict")) {
-            state.dims.habits += 30;
-            state.dims.culture += 6;
+            state.dims.habits += 36;
+            state.dims.culture += 8;
             return 20;
           }
           if (lower.includes("ppe") || lower.includes("glasses") || lower.includes("hearing")) {
-            state.dims.habits += 22;
+            state.dims.habits += 26;
             return 15;
           }
           if (lower.includes("ladder") || lower.includes("roof") || lower.includes("fall")) {
-            state.dims.habits += 14;
+            state.dims.habits += 18;
             return 10;
           }
-          state.dims.habits += 18;
+          state.dims.habits += 20;
           return 12;
         },
       },
       {
         id: "documentation",
-        label: "Documentation",
+        label: "Paperwork & logs",
         text: "How buttoned-up is your safety paperwork – training sign-offs, toolbox talks, incident logs?",
-        helper: "You can answer with something like “all in a binder”, “a mix of paper and text threads”, or “we track everything”.",
+        helper: "Think: “all in a binder”, “a mix of paper and text threads”, or “we track everything”.",
         parse: (raw) => {
           const lower = raw.toLowerCase();
           state.answers.documentation = lower;
           if (lower.includes("track everything") || lower.includes("system")) {
-            state.dims.documentation += 34;
+            state.dims.documentation += 38;
             return 22;
           }
           if (lower.includes("binder") || lower.includes("paper")) {
-            state.dims.documentation += 24;
+            state.dims.documentation += 26;
             return 16;
           }
           if (lower.includes("text") || lower.includes("nowhere") || lower.includes("don’t")) {
-            state.dims.documentation += 12;
+            state.dims.documentation += 14;
             return 10;
           }
-          state.dims.documentation += 18;
+          state.dims.documentation += 20;
           return 14;
         },
       },
       {
+        id: "reporting",
+        label: "Near-miss reporting",
+        text: "When someone has a close call (near-miss), what usually happens?",
+        helper: "Example: “we log it and talk about it next day”, “we just move on”, “depends who’s on site”.",
+        parse: (raw) => {
+          const lower = raw.toLowerCase();
+          state.answers.reporting = lower;
+          if (lower.includes("log") || lower.includes("report") || lower.includes("talk about")) {
+            state.dims.incidents += 16;
+            state.dims.culture += 12;
+            return 18;
+          }
+          if (lower.includes("depends") || lower.includes("sometimes")) {
+            state.dims.culture += 8;
+            return 14;
+          }
+          state.dims.culture += 4;
+          return 10;
+        },
+      },
+      {
+        id: "training",
+        label: "Training cadence",
+        text: "How often does your team get any kind of safety training or toolbox talk?",
+        helper: "Example: “weekly tailgates”, “once a year”, “only when something happens”.",
+        parse: (raw) => {
+          const lower = raw.toLowerCase();
+          state.answers.training = lower;
+          if (lower.includes("weekly") || lower.includes("daily") || lower.includes("monthly")) {
+            state.dims.culture += 16;
+            state.dims.documentation += 10;
+            return 20;
+          }
+          if (lower.includes("year") || lower.includes("annual")) {
+            state.dims.culture += 10;
+            return 14;
+          }
+          if (lower.includes("only") || lower.includes("when something happens")) {
+            state.dims.culture += 4;
+            return 10;
+          }
+          state.dims.culture += 8;
+          return 12;
+        },
+      },
+      {
+        id: "ppe",
+        label: "PPE & equipment",
+        text: "If I dropped in on a random job, how confident are you that the right PPE and basic safety gear are actually on hand?",
+        helper: "You can answer with something like “always stocked”, “usually”, or “hit or miss”.",
+        parse: (raw) => {
+          const lower = raw.toLowerCase();
+          state.answers.ppe = lower;
+          if (lower.includes("always") || lower.includes("stocked") || lower.includes("100%")) {
+            state.dims.habits += 18;
+            return 18;
+          }
+          if (lower.includes("usually") || lower.includes("most")) {
+            state.dims.habits += 12;
+            return 14;
+          }
+          state.dims.habits += 8;
+          return 10;
+        },
+      },
+      {
+        id: "supervision",
+        label: "Site supervision",
+        text: "How often does someone with authority actually walk jobs and coach on safety, not just production?",
+        helper: "Think: “every day”, “once a week”, “only when there’s an issue”.",
+        parse: (raw) => {
+          const lower = raw.toLowerCase();
+          state.answers.supervision = lower;
+          if (lower.includes("every day") || lower.includes("daily")) {
+            state.dims.culture += 18;
+            state.dims.habits += 10;
+            return 20;
+          }
+          if (lower.includes("week") || lower.includes("weekly")) {
+            state.dims.culture += 12;
+            return 16;
+          }
+          state.dims.culture += 6;
+          return 10;
+        },
+      },
+      {
         id: "priority",
-        label: "Priority",
+        label: "Biggest concern",
         text: "If this agent could fix one thing first – what worries you most about safety right now?",
         helper: "Think: “new hires”, “OSHA exposure”, “documentation trail”, “habits in the field”, etc.",
         parse: (raw) => {
@@ -1000,7 +464,7 @@
     }
 
     function normalizeDimScore(val, dimKey) {
-      const max = DIM_MAX[dimKey] || 40;
+      const max = DIM_MAX[dimKey] || 60;
       return Math.max(0, Math.min(100, Math.round((val / max) * 100)));
     }
 
@@ -1009,7 +473,7 @@
         "Incidents & Near-Misses",
         "Jobsite Habits",
         "Documentation & Systems",
-        "Safety Culture & Priorities",
+        "Safety Culture\n& Priorities",
       ];
 
       const data = [
@@ -1030,8 +494,8 @@
               {
                 label: "Readiness",
                 data,
-                backgroundColor: "rgba(56, 189, 248, 0.18)",
-                borderColor: "rgba(56, 189, 248, 0.9)",
+                backgroundColor: "rgba(0, 128, 128, 0.18)",
+                borderColor: "rgba(0, 160, 160, 0.9)",
                 borderWidth: 2,
                 pointRadius: 2,
               },
@@ -1040,6 +504,9 @@
           options: {
             responsive: true,
             maintainAspectRatio: false,
+            layout: {
+              padding: 10,
+            },
             plugins: {
               legend: {
                 display: false,
@@ -1048,10 +515,10 @@
             scales: {
               r: {
                 angleLines: {
-                  color: "rgba(55, 65, 81, 0.8)",
+                  color: "rgba(75, 85, 99, 0.8)",
                 },
                 grid: {
-                  color: "rgba(55, 65, 81, 0.7)",
+                  color: "rgba(75, 85, 99, 0.7)",
                 },
                 suggestedMin: 0,
                 suggestedMax: 100,
@@ -1061,7 +528,7 @@
                 pointLabels: {
                   color: "#9ca3af",
                   font: {
-                    size: 10,
+                    size: 11,
                   },
                 },
               },
@@ -1134,6 +601,10 @@
         tags.push("Jobsite shortcuts");
       }
 
+      if (state.answers.training) {
+        tags.push("Training cadence: " + state.answers.training);
+      }
+
       if (state.answers.priority) {
         tags.push("Top concern: " + state.answers.priority);
       }
@@ -1149,11 +620,11 @@
       if (!state.completed) {
         scoreCalloutEl.textContent =
           `Right now, ${name} is trending in the ${riskLabel.toLowerCase()} band. ` +
-          `Finish the last question to lock in your full radar profile.`;
+          `Finish the remaining questions to lock in your full radar profile.`;
       } else {
         scoreCalloutEl.textContent =
           `${name} is operating in the ${riskLabel.toLowerCase()} band. ` +
-          `Use this radar profile to decide whether to invest first in habits, paperwork, or incident prevention.`;
+          `Use this radar view to decide whether to invest first in incidents, habits, documentation, or safety culture.`;
       }
 
       updateRadarChart();
@@ -1219,14 +690,13 @@
       const priority = state.answers.priority || "your current concern";
 
       const summaryLines = [
-        `<strong>Here’s the snapshot I’d give you in plain language:</strong>`,
+        `<strong>Here’s the snapshot I’d want your leadership team to see:</strong>`,
         "",
         `• <strong>Who you are:</strong> ${state.answers.role || name}. Roughly ${headcount} people in the field/shop.`,
         `• <strong>Recent reality:</strong> ${incidents}.`,
         `• <strong>Biggest exposure you flagged:</strong> ${priority}.`,
         "",
-        `On the radar chart, higher scores mean stronger controls in that area.`,
-        `Low scores mark where incidents and OSHA exposure are most likely to show up first.`,
+        `On the radar, higher scores mean stronger controls. Lower areas show where incidents, OSHA exposure, and reputational risk will likely hit first.`,
       ];
 
       addMessage({
@@ -1281,8 +751,8 @@
         from: "agent",
         text:
           fromButton
-            ? `Great. I’ll ask 5–6 quick questions about your crew, recent incidents, and habits. Answer like it’s just you and me – not a lawyer.`
-            : `I’ll ask 5–6 quick questions about your crew, recent incidents, and habits. Answer like it’s just you and me – not a lawyer.`,
+            ? `Great. I’ll run through about ten quick questions about your crew, incidents, and habits. Answer like it’s just you and me – not a lawyer.`
+            : `I’ll run through about ten quick questions about your crew, incidents, and habits. Answer like it’s just you and me – not a lawyer.`,
       });
 
       askCurrentQuestion();
