@@ -5,14 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Safety Demo – Denar Financial</title>
 
-  <!-- 
-    Brand palette (adjust these to your exact Denar colors):
-    --df-bg:  overall background
-    --df-surface: cards / panels
-    --df-primary: main accent (buttons, highlights)
-    --df-accent: secondary accent
-    --df-text: main text
-  -->
+  <!-- Brand palette: tweak to match exact Denar colors -->
   <style>
     :root {
       --df-bg: #050816;
@@ -53,8 +46,6 @@
       flex-direction: column;
       gap: 18px;
     }
-
-    /* Top nav / brand */
 
     .nav {
       display: flex;
@@ -124,8 +115,6 @@
       box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.25);
     }
 
-    /* Layout: hero + agent */
-
     .main-grid {
       display: grid;
       grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.1fr);
@@ -142,8 +131,6 @@
         grid-template-columns: minmax(0, 1fr);
       }
     }
-
-    /* Left: copy + metrics */
 
     .hero-card {
       background: radial-gradient(circle at top left, #0f172a, #020617 70%);
@@ -168,10 +155,6 @@
       background: rgba(15, 23, 42, 0.8);
       backdrop-filter: blur(10px);
       align-self: flex-start;
-    }
-
-    .hero-pill span {
-      font-size: 10px;
     }
 
     .hero-title {
@@ -307,8 +290,6 @@
       color: var(--df-muted);
       max-width: 220px;
     }
-
-    /* Right: Agent */
 
     .agent-card {
       border-radius: var(--df-radius-xl);
@@ -519,8 +500,6 @@
       margin-top: 2px;
     }
 
-    /* Score summary bar under agent */
-
     .score-card {
       margin-top: 3px;
       border-radius: 16px;
@@ -528,10 +507,16 @@
       background: radial-gradient(circle at top left, #020617, #020617 70%);
       padding: 10px;
       display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.1fr);
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
       gap: 10px;
       align-items: center;
       font-size: 11px;
+    }
+
+    @media (max-width: 900px) {
+      .score-card {
+        grid-template-columns: minmax(0, 1fr);
+      }
     }
 
     .score-main-label {
@@ -602,14 +587,10 @@
       align-items: flex-start;
     }
 
-    .score-right strong {
-      color: var(--df-text);
-      font-weight: 500;
-    }
-
     .score-callout {
       font-size: 11px;
       color: var(--df-muted);
+      margin-top: 4px;
     }
 
     .score-cta {
@@ -626,7 +607,16 @@
       text-decoration: underline;
     }
 
-    /* Footer */
+    .chart-container {
+      width: 100%;
+      height: 170px;
+      position: relative;
+    }
+
+    .chart-container canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
 
     .page-footer {
       font-size: 11px;
@@ -647,6 +637,9 @@
       text-decoration: underline;
     }
   </style>
+
+  <!-- Chart.js for radar chart -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="page-shell">
@@ -665,7 +658,6 @@
     </header>
 
     <main class="main-grid">
-      <!-- Left: copy -->
       <section class="hero-card">
         <div class="hero-pill">
           <span>Built for HVAC, trades & growing teams</span>
@@ -699,7 +691,7 @@
           <div class="metric-card">
             <div class="metric-label">What you get</div>
             <div class="metric-main">
-              <div class="metric-value metric-emphasis">3 key fixes</div>
+              <div class="metric-value metric-emphasis">Visual risk profile</div>
               <div class="metric-chip metric-danger">Before the next near-miss</div>
             </div>
           </div>
@@ -720,7 +712,6 @@
         </div>
       </section>
 
-      <!-- Right: agent -->
       <section class="agent-card">
         <div class="agent-header">
           <div class="agent-header-left">
@@ -736,9 +727,7 @@
         </div>
 
         <div class="agent-body">
-          <div class="chat-scroll" id="chat">
-            <!-- Messages injected via JS -->
-          </div>
+          <div class="chat-scroll" id="chat"></div>
 
           <div>
             <div class="chat-input-row">
@@ -760,7 +749,7 @@
 
         <div class="agent-footer">
           <span id="stepIndicator">Question 1 of 6</span>
-          <span>Optimized for honest, fast answers – not legal advice.</span>
+          <span>Fast, directional read – not legal advice.</span>
         </div>
 
         <div class="score-card">
@@ -780,8 +769,11 @@
             </div>
           </div>
           <div class="score-right">
+            <div class="chart-container">
+              <canvas id="radarChart"></canvas>
+            </div>
             <div class="score-callout" id="scoreCallout">
-              Answer a few questions & we’ll flag your biggest exposure areas.
+              Answer a few questions and we’ll map your risk across incidents, habits, documentation, and culture.
             </div>
             <div class="score-cta">
               Ready for a tailored rollout? Email
@@ -796,17 +788,14 @@
     <footer class="page-footer">
       <span>© 2025 Denar Financial – Safety & treasury solutions for growing teams.</span>
       <span>
-        <a href="https://denarfinancial.com" target="_blank" rel="noreferrer"
-          >denarfinancial.com</a
-        >
+        <a href="https://denarfinancial.com" target="_blank" rel="noreferrer">
+          denarfinancial.com
+        </a>
       </span>
     </footer>
   </div>
 
   <script>
-    // Very lightweight "agent" logic.
-    // A simple decision tree that builds a score and human-readable summary.
-
     const chatEl = document.getElementById("chat");
     const inputEl = document.getElementById("userInput");
     const sendBtn = document.getElementById("sendBtn");
@@ -833,21 +822,37 @@
         incidents: "",
         habits: "",
         documentation: "",
+        priority: "",
       },
       score: 0,
       completed: false,
+      dims: {
+        incidents: 0,
+        habits: 0,
+        documentation: 0,
+        culture: 0,
+      },
     };
+
+    const DIM_MAX = {
+      incidents: 40,
+      habits: 40,
+      documentation: 40,
+      culture: 40,
+    };
+
+    let radarChart = null;
 
     const questions = [
       {
         id: "name",
         label: "First name",
         text: "To start, what’s your first name and your role in the business?",
-        helper:
-          "Example: “Chris, owner” or “Monica, ops manager for a 12-person HVAC shop.”",
+        helper: "Example: “Chris, owner” or “Monica, ops manager for a 12-person HVAC shop.”",
         parse: (raw) => {
           state.answers.name = raw.split(",")[0].trim();
           state.answers.role = raw.trim();
+          state.dims.culture += 10;
           return 8;
         },
       },
@@ -859,9 +864,19 @@
         parse: (raw) => {
           const num = parseInt(raw.replace(/[^0-9]/g, ""), 10);
           state.answers.headcount = isNaN(num) ? raw : num;
-          if (isNaN(num)) return 10;
-          if (num <= 10) return 15;
-          if (num <= 40) return 18;
+          if (isNaN(num)) {
+            state.dims.culture += 8;
+            return 10;
+          }
+          if (num <= 10) {
+            state.dims.culture += 10;
+            return 15;
+          }
+          if (num <= 40) {
+            state.dims.culture += 8;
+            return 18;
+          }
+          state.dims.culture += 6;
           return 16;
         },
       },
@@ -869,17 +884,19 @@
         id: "incidents",
         label: "Recent incidents",
         text: "In the last 12 months, how many recordable incidents or scary near-misses have you had?",
-        helper:
-          "It’s fine to be approximate – “none”, “a couple”, “more than we’d like”.",
+        helper: "It’s fine to be approximate – “none”, “a couple”, “more than we’d like”.",
         parse: (raw) => {
           const lower = raw.toLowerCase();
           state.answers.incidents = lower;
           if (lower.includes("none") || lower.includes("zero") || lower.includes("0")) {
+            state.dims.incidents += 35;
             return 22;
           }
           if (lower.includes("1") || lower.includes("one") || lower.includes("couple")) {
+            state.dims.incidents += 23;
             return 18;
           }
+          state.dims.incidents += 12;
           return 12;
         },
       },
@@ -891,15 +908,20 @@
         parse: (raw) => {
           const lower = raw.toLowerCase();
           state.answers.habits = lower;
-          if (lower.includes("none") || lower.includes("we’re strict")) {
+          if (lower.includes("none") || lower.includes("strict")) {
+            state.dims.habits += 30;
+            state.dims.culture += 6;
             return 20;
           }
           if (lower.includes("ppe") || lower.includes("glasses") || lower.includes("hearing")) {
+            state.dims.habits += 22;
             return 15;
           }
           if (lower.includes("ladder") || lower.includes("roof") || lower.includes("fall")) {
+            state.dims.habits += 14;
             return 10;
           }
+          state.dims.habits += 18;
           return 12;
         },
       },
@@ -907,20 +929,23 @@
         id: "documentation",
         label: "Documentation",
         text: "How buttoned-up is your safety paperwork – training sign-offs, toolbox talks, incident logs?",
-        helper:
-          "You can answer with something like “all in a binder”, “a mix of paper and text threads”, or “we track everything”.",
+        helper: "You can answer with something like “all in a binder”, “a mix of paper and text threads”, or “we track everything”.",
         parse: (raw) => {
           const lower = raw.toLowerCase();
           state.answers.documentation = lower;
           if (lower.includes("track everything") || lower.includes("system")) {
+            state.dims.documentation += 34;
             return 22;
           }
           if (lower.includes("binder") || lower.includes("paper")) {
+            state.dims.documentation += 24;
             return 16;
           }
           if (lower.includes("text") || lower.includes("nowhere") || lower.includes("don’t")) {
+            state.dims.documentation += 12;
             return 10;
           }
+          state.dims.documentation += 18;
           return 14;
         },
       },
@@ -928,10 +953,19 @@
         id: "priority",
         label: "Priority",
         text: "If this agent could fix one thing first – what worries you most about safety right now?",
-        helper:
-          "Think: “new hires”, “OSHA exposure”, “documentation trail”, “habits in the field”, etc.",
+        helper: "Think: “new hires”, “OSHA exposure”, “documentation trail”, “habits in the field”, etc.",
         parse: (raw) => {
+          const lower = raw.toLowerCase();
           state.answers.priority = raw.trim();
+          if (lower.includes("new hire") || lower.includes("onboard")) {
+            state.dims.culture += 10;
+          } else if (lower.includes("osha") || lower.includes("inspection")) {
+            state.dims.documentation += 8;
+          } else if (lower.includes("habit") || lower.includes("field")) {
+            state.dims.habits += 8;
+          } else {
+            state.dims.culture += 6;
+          }
           return 18;
         },
       },
@@ -965,6 +999,81 @@
       stepIndicatorEl.textContent = `Question ${current} of ${total}`;
     }
 
+    function normalizeDimScore(val, dimKey) {
+      const max = DIM_MAX[dimKey] || 40;
+      return Math.max(0, Math.min(100, Math.round((val / max) * 100)));
+    }
+
+    function updateRadarChart() {
+      const labels = [
+        "Incidents & Near-Misses",
+        "Jobsite Habits",
+        "Documentation & Systems",
+        "Safety Culture & Priorities",
+      ];
+
+      const data = [
+        normalizeDimScore(state.dims.incidents, "incidents"),
+        normalizeDimScore(state.dims.habits, "habits"),
+        normalizeDimScore(state.dims.documentation, "documentation"),
+        normalizeDimScore(state.dims.culture, "culture"),
+      ];
+
+      const ctx = document.getElementById("radarChart").getContext("2d");
+
+      if (!radarChart) {
+        radarChart = new Chart(ctx, {
+          type: "radar",
+          data: {
+            labels,
+            datasets: [
+              {
+                label: "Readiness",
+                data,
+                backgroundColor: "rgba(56, 189, 248, 0.18)",
+                borderColor: "rgba(56, 189, 248, 0.9)",
+                borderWidth: 2,
+                pointRadius: 2,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              },
+            },
+            scales: {
+              r: {
+                angleLines: {
+                  color: "rgba(55, 65, 81, 0.8)",
+                },
+                grid: {
+                  color: "rgba(55, 65, 81, 0.7)",
+                },
+                suggestedMin: 0,
+                suggestedMax: 100,
+                ticks: {
+                  display: false,
+                },
+                pointLabels: {
+                  color: "#9ca3af",
+                  font: {
+                    size: 10,
+                  },
+                },
+              },
+            },
+          },
+        });
+      } else {
+        radarChart.data.datasets[0].data = data;
+        radarChart.update();
+      }
+    }
+
     function updateScoreUI() {
       const score = state.score;
       if (score <= 0) {
@@ -975,10 +1084,11 @@
         scoreStatusEl.classList.remove("score-pill-risk");
         scoreStatusEl.classList.add("score-pill-ok");
         metricRiskLabelEl.textContent = "Not assessed";
+        updateRadarChart();
         return;
       }
 
-      const maxScore = questions.length * 25; // theoretical upper bound
+      const maxScore = questions.length * 25;
       const normalized = Math.min(100, Math.round((score / maxScore) * 100));
 
       scoreDisplayEl.textContent = `${normalized}`;
@@ -1007,13 +1117,12 @@
       scoreStatusEl.classList.add(chipClass);
       metricRiskLabelEl.textContent = riskLabel;
 
-      // Update tags + narrative
       scoreTagsEl.innerHTML = "";
       const tags = [];
 
       if (state.answers.incidents.includes("none")) {
         tags.push("Few incidents (good)");
-      } else {
+      } else if (state.answers.incidents) {
         tags.push("Recent incidents / near-misses");
       }
 
@@ -1039,20 +1148,20 @@
       const name = state.answers.name || "your crew";
       if (!state.completed) {
         scoreCalloutEl.textContent =
-          `Right now, ${name} likely sits in the ${riskLabel.toLowerCase()} band. ` +
-          `Finish the last question so we can recommend your first 3 fixes.`;
+          `Right now, ${name} is trending in the ${riskLabel.toLowerCase()} band. ` +
+          `Finish the last question to lock in your full radar profile.`;
       } else {
         scoreCalloutEl.textContent =
           `${name} is operating in the ${riskLabel.toLowerCase()} band. ` +
-          `We’ll prioritize 3 concrete moves across new hire onboarding, jobsite habits, and documentation trail.`;
+          `Use this radar profile to decide whether to invest first in habits, paperwork, or incident prevention.`;
       }
+
+      updateRadarChart();
     }
 
     function askCurrentQuestion() {
       const q = questions[state.step];
-      if (!q) {
-        return;
-      }
+      if (!q) return;
       formatStepIndicator();
 
       addMessage({
@@ -1067,10 +1176,9 @@
       if (!raw.trim()) return;
       const text = raw.trim();
 
-      // Show user message
       addMessage({
         from: "user",
-        text: text,
+        text,
       });
 
       inputEl.value = "";
@@ -1111,16 +1219,14 @@
       const priority = state.answers.priority || "your current concern";
 
       const summaryLines = [
-        `<strong>Here’s the snapshot I’d give you in plain English:</strong>`,
+        `<strong>Here’s the snapshot I’d give you in plain language:</strong>`,
         "",
         `• <strong>Who you are:</strong> ${state.answers.role || name}. Roughly ${headcount} people in the field/shop.`,
         `• <strong>Recent reality:</strong> ${incidents}.`,
         `• <strong>Biggest exposure you flagged:</strong> ${priority}.`,
         "",
-        `From here, a full rollout looks like:`,
-        `1) A tighter, repeatable new hire safety onboarding,`,
-        `2) A simple way to detect & coach around jobsite shortcuts, and`,
-        `3) A digital trail of training + incidents you can pull in seconds.`,
+        `On the radar chart, higher scores mean stronger controls in that area.`,
+        `Low scores mark where incidents and OSHA exposure are most likely to show up first.`,
       ];
 
       addMessage({
@@ -1131,14 +1237,12 @@
       addMessage({
         from: "agent",
         text:
-          `If you’d like, I can turn this into a concrete rollout plan for your shop ` +
-          `– reply with your email here or reach out at <strong>consulting@denarfinancial.com</strong>.`,
+          `If you’d like this turned into a rollout plan for your shop, ` +
+          `reach out at <strong>consulting@denarfinancial.com</strong> with a screenshot of your radar profile.`,
       });
 
       updateScoreUI();
     }
-
-    // Event wiring
 
     inputEl.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
@@ -1153,7 +1257,6 @@
 
     ctaStart.addEventListener("click", () => {
       if (state.step === 0 && chatEl.children.length === 0) {
-        // Kick off fresh
         initConversation(true);
       } else {
         inputEl.focus();
@@ -1170,6 +1273,7 @@
       state.score = 0;
       state.completed = false;
       Object.keys(state.answers).forEach((k) => (state.answers[k] = ""));
+      Object.keys(state.dims).forEach((k) => (state.dims[k] = 0));
       updateScoreUI();
       formatStepIndicator();
 
@@ -1177,14 +1281,13 @@
         from: "agent",
         text:
           fromButton
-            ? `Great. I’ll ask 5-6 quick questions about your crew, recent incidents, and habits. Answer like it’s just you and me – not a lawyer.`
-            : `I’ll ask 5-6 quick questions about your crew, recent incidents, and habits. Answer like it’s just you and me – not a lawyer.`,
+            ? `Great. I’ll ask 5–6 quick questions about your crew, recent incidents, and habits. Answer like it’s just you and me – not a lawyer.`
+            : `I’ll ask 5–6 quick questions about your crew, recent incidents, and habits. Answer like it’s just you and me – not a lawyer.`,
       });
 
       askCurrentQuestion();
     }
 
-    // Initial greeting
     initConversation(false);
   </script>
 </body>
